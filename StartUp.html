@@ -1,254 +1,204 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Raven Hub V3 — Cinematic Animation</title>
-  <!-- Font Awesome 6.4.0 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --bg: #090a10;
-      --card: rgba(22, 25, 40, 0.75);
-      --accent: #a855f7;
-      --accent-glow: rgba(168, 85, 247, 0.45);
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --border: rgba(168, 85, 247, 0.25);
-      --gradient: radial-gradient(circle at 50% 0%, #1e1035 0%, var(--bg) 70%);
-    }
+<style>
+  /* --- HERO LOGO CARD --- */
+  .logo-card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 45px 70px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform-style: preserve-3d;
+    cursor: default;
+    overflow: hidden;
+    
+    /* Card emerges smoothly first */
+    opacity: 0;
+    animation: cardFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    }
+  /* Interactive light tracking sheen */
+  .logo-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      700px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(168, 85, 247, 0.18),
+      transparent 45%
+    );
+  }
 
-    body {
-      background: var(--gradient);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      perspective: 1200px;
-    }
+  .logo-card:hover::before {
+    opacity: 1;
+  }
 
-    /* Grid background from theme */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-size: 32px 32px;
-      z-index: -1;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    }
+  .logo-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 25px 50px -15px var(--accent-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
 
-    /* --- HERO LOGO CARD --- */
-    .logo-card {
-      position: relative;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 45px 70px;
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      transform-style: preserve-3d;
-      cursor: default;
-      overflow: hidden;
-      
-      /* Card emerges smoothly first */
+  /* --- 1. THE CROW ICON (0.2s - 1.8s) --- */
+  .crow-wrapper {
+    width: 86px;
+    height: 86px;
+    border-radius: 20px;
+    background: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 25px rgba(168, 85, 247, 0.2);
+    transform: translateZ(35px);
+    
+    /* Slow, cinematic scale and rotation reveal */
+    opacity: 0;
+    animation: crowReveal 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  }
+
+  .crow-icon {
+    font-size: 3rem;
+    color: var(--accent);
+    filter: drop-shadow(0 0 16px var(--accent));
+    /* Smooth ambient idle breathing begins after reveal finishes */
+    animation: crowIdle 4s ease-in-out infinite 1.8s;
+    transform-origin: center;
+  }
+
+  /* --- 2. "RAVEN HUB" TITLE (0.8s - 2.2s) --- */
+  .text-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transform: translateZ(20px);
+  }
+
+  .brand-title {
+    font-size: 3.4rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1;
+    background: linear-gradient(135deg, #ffffff 20%, #e2d6ff 60%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Slow film-style fade and glide */
+    opacity: 0;
+    animation: titleReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+  }
+
+  /* --- 3. THE V3 BADGE DROP (1.8s - 3.0s) --- */
+  .version-badge {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #ffffff;
+    background: linear-gradient(135deg, #a855f7, #6b21a8);
+    padding: 7px 16px;
+    border-radius: 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 0 25px var(--accent-glow);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    /* Starts high above, drops slowly with real weight */
+    opacity: 0;
+    transform: translateY(-65px) rotate(-8deg) scale(0.9);
+    animation: badgeGravityDrop 1.2s cubic-bezier(0.34, 1.25, 0.64, 1) 1.8s forwards;
+  }
+
+  /* --- CINEMATIC KEYFRAMES --- */
+
+  @keyframes cardFadeIn {
+    0% {
       opacity: 0;
-      animation: cardFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transform: scale(0.96) translateY(10px);
     }
-
-    /* Interactive light tracking sheen */
-    .logo-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      background: radial-gradient(
-        700px circle at var(--mx, 50%) var(--my, 50%),
-        rgba(168, 85, 247, 0.18),
-        transparent 45%
-      );
-    }
-
-    .logo-card:hover::before {
+    100% {
       opacity: 1;
+      transform: scale(1) translateY(0);
     }
+  }
 
-    .logo-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 25px 50px -15px var(--accent-glow),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  @keyframes crowReveal {
+    0% {
+      opacity: 0;
+      transform: translateZ(35px) scale(0.6) rotate(-15deg);
+      box-shadow: inset 0 0 0px rgba(168, 85, 247, 0);
     }
-
-    /* --- 1. THE CROW ICON (0.2s - 1.8s) --- */
-    .crow-wrapper {
-      width: 86px;
-      height: 86px;
-      border-radius: 20px;
-      background: rgba(168, 85, 247, 0.08);
-      border: 1px solid rgba(168, 85, 247, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    100% {
+      opacity: 1;
+      transform: translateZ(35px) scale(1) rotate(0deg);
       box-shadow: inset 0 0 25px rgba(168, 85, 247, 0.2);
-      transform: translateZ(35px);
-      
-      /* Slow, cinematic scale and rotation reveal */
-      opacity: 0;
-      animation: crowReveal 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
     }
+  }
 
-    .crow-icon {
-      font-size: 3rem;
-      color: var(--accent);
+  @keyframes crowIdle {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
       filter: drop-shadow(0 0 16px var(--accent));
-      /* Smooth ambient idle breathing begins after reveal finishes */
-      animation: crowIdle 4s ease-in-out infinite 1.8s;
-      transform-origin: center;
     }
-
-    /* --- 2. "RAVEN HUB" TITLE (0.8s - 2.2s) --- */
-    .text-group {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transform: translateZ(20px);
+    50% {
+      transform: translateY(-6px) rotate(-3deg);
+      filter: drop-shadow(0 0 26px var(--accent));
     }
+  }
 
-    .brand-title {
-      font-size: 3.4rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1;
-      background: linear-gradient(135deg, #ffffff 20%, #e2d6ff 60%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      
-      /* Slow film-style fade and glide */
+  @keyframes titleReveal {
+    0% {
       opacity: 0;
-      animation: titleReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+      transform: translateX(-35px);
+      letter-spacing: 4px;
     }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+      letter-spacing: -1px;
+    }
+  }
 
-    /* --- 3. THE V3 BADGE DROP (1.8s - 3.0s) --- */
-    .version-badge {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #ffffff;
-      background: linear-gradient(135deg, #a855f7, #6b21a8);
-      padding: 7px 16px;
-      border-radius: 30px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      box-shadow: 0 0 25px var(--accent-glow);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      
-      /* Starts high above, drops slowly with real weight */
+  /* Realistic gravity easing: falls slower, lands with a soft settle */
+  @keyframes badgeGravityDrop {
+    0% {
       opacity: 0;
       transform: translateY(-65px) rotate(-8deg) scale(0.9);
-      animation: badgeGravityDrop 1.2s cubic-bezier(0.34, 1.25, 0.64, 1) 1.8s forwards;
     }
-
-    /* --- CINEMATIC KEYFRAMES --- */
-
-    @keyframes cardFadeIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.96) translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
+    60% {
+      opacity: 1;
+      transform: translateY(6px) rotate(2deg) scale(1.02);
     }
-
-    @keyframes crowReveal {
-      0% {
-        opacity: 0;
-        transform: translateZ(35px) scale(0.6) rotate(-15deg);
-        box-shadow: inset 0 0 0px rgba(168, 85, 247, 0);
-      }
-      100% {
-        opacity: 1;
-        transform: translateZ(35px) scale(1) rotate(0deg);
-        box-shadow: inset 0 0 25px rgba(168, 85, 247, 0.2);
-      }
+    85% {
+      transform: translateY(-3px) rotate(-1deg) scale(0.99);
     }
-
-    @keyframes crowIdle {
-      0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-        filter: drop-shadow(0 0 16px var(--accent));
-      }
-      50% {
-        transform: translateY(-6px) rotate(-3deg);
-        filter: drop-shadow(0 0 26px var(--accent));
-      }
+    100% {
+      opacity: 1;
+      transform: translateY(0px) rotate(0deg) scale(1);
     }
+  }
+</style>
 
-    @keyframes titleReveal {
-      0% {
-        opacity: 0;
-        transform: translateX(-35px);
-        letter-spacing: 4px;
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-        letter-spacing: -1px;
-      }
-    }
-
-    /* Realistic gravity easing: falls slower, lands with a soft settle */
-    @keyframes badgeGravityDrop {
-      0% {
-        opacity: 0;
-        transform: translateY(-65px) rotate(-8deg) scale(0.9);
-      }
-      60% {
-        opacity: 1;
-        transform: translateY(6px) rotate(2deg) scale(1.02);
-      }
-      85% {
-        transform: translateY(-3px) rotate(-1deg) scale(0.99);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0px) rotate(0deg) scale(1);
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="logo-card" id="logoCard">
-    <div class="crow-wrapper">
-      <i class="fa-solid fa-crow crow-icon"></i>
-    </div>
-    <div class="text-group">
-      <span class="brand-title">Raven Hub</span>
-      <span class="version-badge">V3</span>
-    </div>
+<div class="logo-card" id="logoCard">
+  <div class="crow-wrapper">
+    <i class="fa-solid fa-crow crow-icon"></i>
   </div>
+  <div class="text-group">
+    <span class="brand-title">Raven Hub</span>
+    <span class="version-badge">V3</span>
+  </div>
+</div>
 
-  <script>
-    // Smooth 3D tilt tracking that activates without jarring the animation
+<script>
+  // Added an isolator function so this script doesn't conflict with your main app
+  (() => {
     const card = document.getElementById('logoCard');
+    if (!card) return;
 
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
@@ -266,7 +216,5 @@
     card.addEventListener('mouseleave', () => {
       card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0)';
     });
-  </script>
-
-</body>
-</html>
+  })();
+</script>
